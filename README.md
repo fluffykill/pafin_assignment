@@ -1,6 +1,6 @@
 ## Description
 
-Pafin Assignment
+Pafin assignment for backend handling of a users table
 
 ## Installation
 
