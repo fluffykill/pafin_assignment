@@ -11,7 +11,7 @@ const getUsers = (req: Request, res: Response) => {
   pool.query(getUsersQuery, (error, results) => {
     if (error) {
       console.error(error);
-      return res.status(500).send(error.message);
+      return res.status(500).send("Failed to get users");
     };
     res.status(200).json(results.rows);
   });
@@ -25,7 +25,7 @@ const getUserById = (req: Request, res: Response) => {
   pool.query(getUserByIdQuery, [id], (error, results) => {
     if (error) {
       console.error(error);
-      return res.status(500).send(error.message);
+      return res.status(500).send(`Failed to get user with id: ${id}`);
     };
     res.status(200).json(results.rows);
   });
@@ -42,14 +42,14 @@ const createUser = (req: Request, res: Response) => {
       pool.query(createUserQuery, [name, email, hash], (error, results) => {
         if (error) {
           console.error(error);
-          return res.status(500).send(error.message);
+          return res.status(500).send("Failed to create new user");
         };
-        res.status(201).send(`User added with ID: ${results.rows[0].id}`)
+        res.status(201).send(`User added with id: ${results.rows[0].id}`)
       });
     })
     .catch(err => {
       console.error(err);
-      return res.status(500).send("Password Failed");
+      return res.status(500).send("Failed to create new user");
     });
 }
 
@@ -71,15 +71,15 @@ const updateUser = (req: Request, res: Response) => {
         (error, results) => {
           if (error) {
             console.error(error);
-            return res.status(500).send(error.message);
+            return res.status(500).send(`Failed to modify user with id: ${id}`);
           };
-          res.status(200).send(`User modified with ID: ${id}`)
+          res.status(200).send(`User modified with id: ${id}`)
         }
       )
     })
     .catch(err => {
       console.error(err);
-      return res.status(500).send("Password Failed");
+      return res.status(500).send(`Failed to modify user with id: ${id}`);
     });
 }
 
@@ -91,7 +91,7 @@ const deleteUser = (req: Request, res: Response) => {
   pool.query(getUserByIdQuery, [id], (error, results) => {
     if (error) {
       console.error(error);
-      return res.status(500).send(error.message);
+      return res.status(500).send(`Failed to delete user with id: ${id}`);
     };
     if (!results.rows.length) {
       res.send("User does not exist in the database");
@@ -99,9 +99,9 @@ const deleteUser = (req: Request, res: Response) => {
       pool.query(deleteUserQuery, [id], (error, results) => {
         if (error) {
           console.error(error);
-          return res.status(500).send(error.message);
+          return res.status(500).send(`Failed to delete user with id: ${id}`);
         };
-        res.status(200).send(`User deleted with ID: ${id}`)
+        res.status(200).send(`User deleted with id: ${id}`)
       });
     }
   });
