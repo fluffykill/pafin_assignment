@@ -7,6 +7,7 @@ import { getUsersQuery, getUserByIdQuery, createUserQuery, updateUserQuery, dele
 
 const saltRounds = process.env.SALTROUNDS || 10;
 
+// TODO: Update to support pagination instead of returning entire users table
 const getUsers = (req: Request, res: Response) => {
   pool.query(getUsersQuery, (error, results) => {
     if (error) {

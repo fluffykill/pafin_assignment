@@ -1,6 +1,6 @@
 ## Description
 
-Pafin assignment for backend handling of a users table
+Pafin assignment for backend handling of a users table using Express.js
 
 ## Installation
 
