@@ -9,6 +9,7 @@ import {
   createUserQuery,
   updateUserQuery,
   deleteUserQuery,
+  getUserByEmailQuery,
 } from "./queries";
 
 const saltRounds = process.env.SALTROUNDS || 10;
@@ -48,9 +49,14 @@ const createUser = async (req: Request, res: Response) => {
   }
 
   try {
-    const hash = await bcrypt.hash(password, saltRounds);
-    const result = await pool.query(createUserQuery, [name, email, hash]);
-    res.status(201).send(`User added with id: ${result.rows[0].id}`);
+    const user = await pool.query(getUserByEmailQuery, [email]);
+    if (user.rows.length) {
+      res.status(400).send("User with this email already exists.");
+    } else {
+      const hash = await bcrypt.hash(password, saltRounds);
+      const result = await pool.query(createUserQuery, [name, email, hash]);
+      res.status(201).send(`User added with id: ${result.rows[0].id}`);
+    }
   } catch (e) {
     console.error(e);
     res.status(500).send("Failed to create new user");
@@ -68,9 +74,14 @@ const updateUser = async (req: Request, res: Response) => {
   }
 
   try {
-    const hash = await bcrypt.hash(password, saltRounds);
-    const result = await pool.query(updateUserQuery, [name, email, hash, id]);
-    res.status(200).send(`User modified with id: ${id}`);
+    const user = await pool.query(getUserByEmailQuery, [email]);
+    if (user.rows.length && user.rows.every((row) => row.id != id)) {
+      res.status(400).send("User with this email already exists.");
+    } else {
+      const hash = await bcrypt.hash(password, saltRounds);
+      const result = await pool.query(updateUserQuery, [name, email, hash, id]);
+      res.status(200).send(`User modified with id: ${id}`);
+    }
   } catch (e) {
     console.error(e);
     res.status(500).send(`Failed to modify user with id: ${id}`);

@@ -1,10 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUserQuery = exports.updateUserQuery = exports.createUserQuery = exports.getUserByIdQuery = exports.getUsersQuery = void 0;
+exports.deleteUserQuery = exports.updateUserQuery = exports.createUserQuery = exports.getUserByEmailQuery = exports.getUserByIdQuery = exports.getUsersQuery = void 0;
 const getUsersQuery = "SELECT * FROM users";
 exports.getUsersQuery = getUsersQuery;
 const getUserByIdQuery = "SELECT * FROM users WHERE id = $1";
 exports.getUserByIdQuery = getUserByIdQuery;
+const getUserByEmailQuery = "SELECT * FROM users WHERE email = $1";
+exports.getUserByEmailQuery = getUserByEmailQuery;
 const createUserQuery = "INSERT INTO users (id, name, email, password) VALUES (gen_random_uuid (),$1, $2, $3) RETURNING *";
 exports.createUserQuery = createUserQuery;
 const updateUserQuery = "UPDATE users SET name = $1, email = $2, password = $3 WHERE id = $4";

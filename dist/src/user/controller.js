@@ -52,9 +52,15 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         return res.status(400).send("Please provide a proper email");
     }
     try {
-        const hash = yield bcrypt_1.default.hash(password, saltRounds);
-        const result = yield db_1.default.query(queries_1.createUserQuery, [name, email, hash]);
-        res.status(201).send(`User added with id: ${result.rows[0].id}`);
+        const user = yield db_1.default.query(queries_1.getUserByEmailQuery, [email]);
+        if (user.rows.length) {
+            res.status(400).send("User with this email already exists.");
+        }
+        else {
+            const hash = yield bcrypt_1.default.hash(password, saltRounds);
+            const result = yield db_1.default.query(queries_1.createUserQuery, [name, email, hash]);
+            res.status(201).send(`User added with id: ${result.rows[0].id}`);
+        }
     }
     catch (e) {
         console.error(e);
@@ -72,9 +78,15 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         return res.status(400).send("Please provide a proper email");
     }
     try {
-        const hash = yield bcrypt_1.default.hash(password, saltRounds);
-        const result = yield db_1.default.query(queries_1.updateUserQuery, [name, email, hash, id]);
-        res.status(200).send(`User modified with id: ${id}`);
+        const user = yield db_1.default.query(queries_1.getUserByEmailQuery, [email]);
+        if (user.rows.length && user.rows.every((row) => row.id != id)) {
+            res.status(400).send("User with this email already exists.");
+        }
+        else {
+            const hash = yield bcrypt_1.default.hash(password, saltRounds);
+            const result = yield db_1.default.query(queries_1.updateUserQuery, [name, email, hash, id]);
+            res.status(200).send(`User modified with id: ${id}`);
+        }
     }
     catch (e) {
         console.error(e);
