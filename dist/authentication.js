@@ -11,7 +11,7 @@ const generateAccessToken = (username) => {
 };
 exports.generateAccessToken = generateAccessToken;
 const authenticateToken = (req, res, next) => {
-    const token = req.headers['authorization'] || '';
+    const token = req.headers["authorization"] || "";
     if (!(0, isJWT_1.default)(token))
         return res.sendStatus(401);
     jsonwebtoken_1.default.verify(token, process.env.TOKENSECRET, (err, user) => {

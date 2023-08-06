@@ -12,6 +12,6 @@ const pool = new Pool({
     host: "localhost",
     database: "pafin",
     password,
-    port: 5432
+    port: 5432,
 });
 exports.default = pool;
